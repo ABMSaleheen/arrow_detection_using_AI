@@ -19,7 +19,7 @@ public:
         double fps = 40.0;
 
         int codec = cv::VideoWriter::fourcc('X', 'V', 'I', 'D');
-        video_writer_.open("/home/saleheen_linux/others/cv_vid/arrow_detection/Left/output.avi", codec, fps, frame_size, true);
+        video_writer_.open("/home/saleheen_linux/others/cv_vid/arrow_detection/Right/output.avi", codec, fps, frame_size, true);
 
 
         if (!video_writer_.isOpened()) {
@@ -64,7 +64,8 @@ private:
 
             // Save individual frames as images for testing
             static int frame_count = 0;
-            cv::imwrite("/home/saleheen_linux/others/cv_vid/arrow_detection/Left/left_dir_" + std::to_string(frame_count++) + ".jpg", mask);
+            // cv::imwrite("/home/saleheen_linux/others/cv_vid/arrow_detection/Left/left_dir_" + std::to_string(frame_count++) + ".jpg", mask);
+            cv::imwrite("/home/saleheen_linux/others/cv_vid/arrow_detection/Right/right_dir_" + std::to_string(frame_count++) + ".jpg", mask);
 
             if (video_writer_.isOpened()) {
                 video_writer_.write(mask);
