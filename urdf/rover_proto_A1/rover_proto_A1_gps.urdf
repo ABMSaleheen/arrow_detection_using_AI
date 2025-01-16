@@ -1,0 +1,1032 @@
+<?xml version="1.0" ?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="rover_proto_A1_gps">
+  <link
+    name="Chassis">
+    <inertial>
+      <origin
+        xyz="-0.00365912647993058 -3.92554968145498E-06 -0.0261956410433819"
+        rpy="0 0 0" />
+      <mass
+        value="17.7896117328331" />
+      <inertia
+        ixx="0.188123995834319"
+        ixy="-3.69133382058458E-06"
+        ixz="0.00394291892265975"
+        iyy="1.49358440846885"
+        iyz="-8.27261031196303E-06"
+        izz="1.66880203354025" />
+    </inertial>
+
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://line_following_rover/urdf/rover_proto_A1/meshes/Chassis.dae" />
+      </geometry>
+      <material
+        name="red">
+        <color
+          rgba="1.0 0.0 1.0 1" />
+      </material>
+    </visual>
+
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://line_following_rover/urdf/rover_proto_A1/meshes/Chassis.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <link
+    name="Lights_Fwd_Link">
+    <inertial>
+      <origin
+        xyz="0.507527194200393 -3.69511700598624E-06 -0.0223168195436138"
+        rpy="0 0 0" />
+      <mass
+        value="0.0132155007740645" />
+      <inertia
+        ixx="3.9910662761744E-07"
+        ixy="7.75490345241783E-24"
+        ixz="-1.19868842711491E-23"
+        iyy="3.06977336844872E-07"
+        iyz="-1.18562554465934E-23"
+        izz="3.06977336844872E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://line_following_rover/urdf/rover_proto_A1/meshes/Lights_Fwd_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+
+    <!-- <light name='light_source1' type='spot'>
+      <pose frame=''>0.25 0 0.25 0 -0.7854 0</pose>
+      <attenuation>
+        <range>30</range>
+        <linear>0.05</linear>
+      </attenuation>
+      <diffuse>1 0 0 1</diffuse>
+      <specular>1 0 0 1</specular>
+      <spot>
+        <inner_angle>0.3</inner_angle>
+        <outer_angle>0.35</outer_angle>
+        <falloff>1</falloff>
+      </spot>
+      <direction>0 0 -1</direction>
+    </light> -->
+
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://line_following_rover/urdf/rover_proto_A1/meshes/Lights_Fwd_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint
+    name="Lights_Fwd_Joint"
+    type="fixed">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="Chassis" />
+    <child
+      link="Lights_Fwd_Link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="Lights_Back_Link">
+    <inertial>
+      <origin
+        xyz="-0.510085250925588 -3.69511700598624E-06 -0.0223168195436137"
+        rpy="0 0 0" />
+      <mass
+        value="0.0132155007740645" />
+      <inertia
+        ixx="3.9910662761744E-07"
+        ixy="6.8244111649112E-24"
+        ixz="-1.29839861069366E-23"
+        iyy="3.06977336844872E-07"
+        iyz="-6.13492287643496E-24"
+        izz="3.06977336844872E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://line_following_rover/urdf/rover_proto_A1/meshes/Lights_Back_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://line_following_rover/urdf/rover_proto_A1/meshes/Lights_Back_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Lights_Back_Joint"
+    type="fixed">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="Chassis" />
+    <child
+      link="Lights_Back_Link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+
+  <link
+    name="Lidar_Fwd_Link">
+    <inertial>
+      <origin
+        xyz="-2.77555756156289E-17 -2.77555756156289E-17 0.00132574469891017"
+        rpy="0 0 0" />
+      <mass
+        value="0.00718054669235149" />
+      <inertia
+        ixx="4.06173549617938E-07"
+        ixy="-1.78668025637928E-27"
+        ixz="-1.49774027075481E-23"
+        iyy="4.06693549617938E-07"
+        iyz="-2.63696474568856E-26"
+        izz="5.54439348186677E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://line_following_rover/urdf/rover_proto_A1/meshes/Lidar_Fwd_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://line_following_rover/urdf/rover_proto_A1/meshes/Lidar_Fwd_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint
+    name="Lidar_Fwd_Joint"
+    type="fixed">
+    <origin
+      xyz="0.33872 0 0.116"
+      rpy="0 0 -1.57" />
+    <parent
+      link="Chassis" />
+    <child
+      link="Lidar_Fwd_Link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+
+  <link
+    name="Lidar_Back_Link">
+    <inertial>
+      <origin
+        xyz="0 -2.77555756156289E-17 0.00132574469891017"
+        rpy="0 0 0" />
+      <mass
+        value="0.00718054669235149" />
+      <inertia
+        ixx="4.06173549617938E-07"
+        ixy="2.38255619983598E-27"
+        ixz="-1.74704316295583E-23"
+        iyy="4.06693549617938E-07"
+        iyz="4.66873926235502E-42"
+        izz="5.54439348186677E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://line_following_rover/urdf/rover_proto_A1/meshes/Lidar_Back_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://line_following_rover/urdf/rover_proto_A1/meshes/Lidar_Back_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint
+    name="Lidar_Back_Joint"
+    type="fixed">
+    <origin
+      xyz="-0.34128 0 0.166"
+      rpy="0 0 1.57" />
+    <parent
+      link="Chassis" />
+    <child
+      link="Lidar_Back_Link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+
+  <link
+    name="Camera_Fwd_Link">
+    <inertial>
+      <origin
+        xyz="-0.0197350018270021 3.65896736520543E-08 -0.0158959745479343"
+        rpy="0 0 0" />
+      <mass
+        value="0.113752710585391" />
+      <inertia
+        ixx="7.31847315721116E-05"
+        ixy="3.14172237115925E-12"
+        ixz="1.11972038452148E-06"
+        iyy="6.00130734763396E-05"
+        iyz="-1.75810930148708E-10"
+        izz="3.20124877089661E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://line_following_rover/urdf/rover_proto_A1/meshes/Camera_Fwd_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://line_following_rover/urdf/rover_proto_A1/meshes/Camera_Fwd_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint
+    name="Camera_Fwd_Joint"
+    type="fixed">
+    <origin
+      xyz="0.49872 0 0.046965"
+      rpy="0 0 0" />
+    <parent
+      link="Chassis" />
+    <child
+      link="Camera_Fwd_Link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+
+<!-- Test link for back cam -->
+  <link name="Camera_Back_Link_Frame">
+    <origin
+      xyz="0.0197350018270018 -1.82825367733841E-07 -0.0158959745479384"
+      rpy="0 0 0" />
+
+  </link>
+
+  <joint
+    name="Camera_Back_Frame_Joint"
+    type="fixed">
+    <origin
+      xyz="-0.50128 0 0.046965"
+      rpy="0 0 3.1416" />
+    <parent
+      link="Chassis" />
+    <child
+      link="Camera_Back_Link_Frame" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+
+  <link
+    name="Camera_Back_Link">
+    <inertial>
+      <origin
+        xyz="0.0197350018270018 -1.82825367733841E-07 -0.0158959745479384"
+        rpy="0 0 0" />
+      <mass
+        value="0.113752710585391" />
+      <inertia
+        ixx="7.31847315721118E-05"
+        ixy="3.14172236060984E-12"
+        ixz="-1.1197203845215E-06"
+        iyy="6.00130734763398E-05"
+        iyz="1.75810930147711E-10"
+        izz="3.20124877089662E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://line_following_rover/urdf/rover_proto_A1/meshes/Camera_Back_Link.dae" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://line_following_rover/urdf/rover_proto_A1/meshes/Camera_Back_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  
+
+  <joint
+    name="Camera_Back_Joint"
+    type="fixed">
+    <origin
+      xyz="-0.50128 0 0.046965"
+      rpy="0 0 0" />
+    <parent
+      link="Chassis" />
+    <child
+      link="Camera_Back_Link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+
+  <link
+    name="Lights_Right_Link">
+    <inertial>
+      <origin
+        xyz="-0.00127902836259733 -0.183809917679996 -0.0251832122349882"
+        rpy="0 0 0" />
+      <mass
+        value="0.0169913581380829" />
+      <inertia
+        ixx="3.94685147371978E-07"
+        ixy="4.55988347062208E-24"
+        ixz="-9.86348436712857E-24"
+        iyy="5.13137092650993E-07"
+        iyz="-1.19093415939117E-24"
+        izz="3.94685147371978E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://line_following_rover/urdf/rover_proto_A1/meshes/Lights_Right_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://line_following_rover/urdf/rover_proto_A1/meshes/Lights_Right_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint
+    name="Lights_Right_Joint"
+    type="fixed">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="Chassis" />
+    <child
+      link="Lights_Right_Link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+
+  <link
+    name="Lights_Left_Link">
+    <inertial>
+      <origin
+        xyz="-0.00127902836259736 0.183802527445984 -0.0251832122349882"
+        rpy="0 0 0" />
+      <mass
+        value="0.0169913581380829" />
+      <inertia
+        ixx="3.94685147371979E-07"
+        ixy="-2.7969213597333E-24"
+        ixz="-1.05320496259739E-23"
+        iyy="5.13137092650994E-07"
+        iyz="5.48402625179042E-25"
+        izz="3.94685147371979E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://line_following_rover/urdf/rover_proto_A1/meshes/Lights_Left_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://line_following_rover/urdf/rover_proto_A1/meshes/Lights_Left_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint
+    name="Lights_Left_Joint"
+    type="fixed">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="Chassis" />
+    <child
+      link="Lights_Left_Link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+
+  <!-- Wheel Back Right -->
+
+  <link
+    name="Wheel_4_Link">
+    <inertial>
+      <origin
+        xyz="5.55111512312578E-16 2.22044604925031E-16 -0.0168532279865622"
+        rpy="0 0 0" />
+      <mass
+        value="0.456818382000865" />
+      <inertia
+        ixx="0.000768196974353752"
+        ixy="-7.84270618276785E-19"
+        ixz="-6.61935099916422E-19"
+        iyy="0.000768196974353751"
+        iyz="-2.61489639644202E-19"
+        izz="0.00134492456127817" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://line_following_rover/urdf/rover_proto_A1/meshes/Wheel_4_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://line_following_rover/urdf/rover_proto_A1/meshes/Wheel_4_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint
+    name="Wheel_4_Joint"
+    type="continuous">
+    <origin
+      xyz="-0.35128 -0.215 -0.04"
+      rpy="1.5708 0 0" />
+    <parent
+      link="Chassis" />
+    <child
+      link="Wheel_4_Link" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      effort="10"
+      velocity="12" />
+    <dynamics
+      damping="0.25"
+      friction="0.5" />
+  </joint>
+
+  <!-- Wheel Back Left -->
+  <link
+    name="Wheel_3_Link">
+    <inertial>
+      <origin
+        xyz="-5.55111512312578E-16 -2.77555756156289E-16 0.0168532279865622"
+        rpy="0 0 0" />
+      <mass
+        value="0.456818382000868" />
+      <inertia
+        ixx="0.000768196974353756"
+        ixy="-1.88597179662025E-19"
+        ixz="-4.93381505459919E-19"
+        iyy="0.000768196974353758"
+        iyz="-2.11063331529539E-19"
+        izz="0.00134492456127819" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://line_following_rover/urdf/rover_proto_A1/meshes/Wheel_3_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://line_following_rover/urdf/rover_proto_A1/meshes/Wheel_3_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint
+    name="Wheel_3_Joint"
+    type="continuous">
+    <origin
+      xyz="-0.35128 0.21499 -0.04"
+      rpy="1.5708 0 0" />
+    <parent
+      link="Chassis" />
+    <child
+      link="Wheel_3_Link" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      effort="10"
+      velocity="12" />
+    <dynamics
+      damping="0.25"
+      friction="0.5" />
+  </joint>
+
+  <!-- Wheel Front Left -->
+  <link
+    name="Wheel_2_Link">  
+    <inertial>
+      <origin
+        xyz="-4.9960036108132E-16 2.22044604925031E-16 0.0168532279865622"
+        rpy="0 0 0" />
+      <mass
+        value="0.456818382000864" />
+      <inertia
+        ixx="0.000768196974353751"
+        ixy="1.02115446619666E-18"
+        ixz="-7.60710993935944E-19"
+        iyy="0.000768196974353751"
+        iyz="3.64043121106115E-19"
+        izz="0.00134492456127817" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://line_following_rover/urdf/rover_proto_A1/meshes/Wheel_2_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://line_following_rover/urdf/rover_proto_A1/meshes/Wheel_2_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint
+    name="Wheel_2_Joint"
+    type="continuous">
+    <origin
+      xyz="0.34872 0.215 -0.04"
+      rpy="1.5708 0 0" />
+    <parent
+      link="Chassis" />
+    <child
+      link="Wheel_2_Link" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      effort="10"
+      velocity="12" />
+    <dynamics
+      damping="0.25"
+      friction="0.5" />
+  </joint>
+
+  <!-- Wheel Front Right -->
+  <link
+    name="Wheel_1_Link">
+    <inertial>
+      <origin
+        xyz="4.44089209850063E-16 -2.77555756156289E-16 -0.0168532279865622"
+        rpy="0 0 0" />
+      <mass
+        value="0.456818382000864" />
+      <inertia
+        ixx="0.000768196974353751"
+        ixy="4.13590306270488E-21"
+        ixz="-4.91914176943726E-19"
+        iyy="0.000768196974353752"
+        iyz="2.33003390471223E-19"
+        izz="0.00134492456127817" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://line_following_rover/urdf/rover_proto_A1/meshes/Wheel_1_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://line_following_rover/urdf/rover_proto_A1/meshes/Wheel_1_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint
+    name="Wheel_1_Joint"
+    type="continuous">
+    <origin
+      xyz="0.34872 -0.215 -0.04"
+      rpy="1.5708 0 0" />
+    <parent
+      link="Chassis" />
+    <child
+      link="Wheel_1_Link" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      effort="10"
+      velocity="12" />
+    <dynamics
+      damping="0.25"
+      friction="0.5" />
+  </joint>
+
+<!-- /////////////////// GpS ////////// -->
+  <link name="link_GPS">
+    <visual>
+      <geometry>
+        <cylinder radius="0.02" length="0.02" />
+      </geometry>
+      <material name="white">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+
+    <inertial>
+      <mass value="0.002" />
+      <inertia ixx="1e-13" ixy="0.0" ixz="0" iyy="1e-13" iyz="0" izz="1e-13" />
+    </inertial>
+
+    <collision>
+      <geometry>
+        <cylinder radius="0.02" length="0.02" />
+      </geometry>
+    </collision>
+  </link>
+
+  <gazebo reference="link_GPS">
+    <sensor name="gps_rover" type="gps">
+      <pose>0 0 0.1 0 0 0</pose> <!-- Adjust pose relative to your base -->
+      <update_rate>5.0</update_rate>
+      <always_on>true</always_on>
+      <visualize>false</visualize>
+
+      <plugin name="gps_rover_plugin" filename="libgazebo_ros_gps_sensor.so">
+        <ros>
+          <namespace>/gps_rover</namespace>
+          <remapping>~/out:=rover_gps_data</remapping>
+        </ros>
+        <bodyName>link_GPS</bodyName>
+        <frameId>link_GPS</frameId>
+        <topicName>/gps/fix</topicName>
+        <velocityTopicName>/gps/fix_velocity</velocityTopicName>
+        <referenceLatitude>-30.06022459407145675</referenceLatitude>
+        <referenceLongitude>-51.173913575780311191</referenceLongitude>
+        <referenceHeading>90</referenceHeading>
+        <referenceAltitude>10</referenceAltitude>
+        <offset>0 0 0</offset>
+        <drift>0.001 0.001 0.001</drift>
+        <gaussianNoise>0.05 0.05 0.05</gaussianNoise>
+        <velocityDrift>0.001 0.001 0.001</velocityDrift>
+        <velocityGaussianNoise>0.5 0.5 0.5</velocityGaussianNoise>
+      </plugin>
+
+
+    </sensor>
+  </gazebo> 
+
+
+  <joint name="gps_rover_joint" type="fixed">
+      <origin xyz="0 0 -0.01" rpy="0 0.0 0.0" />
+      <parent link="Chassis" />
+      <child link="link_GPS" />
+      <axis xyz="0.0 0.0 1.0" />
+  </joint>
+
+
+  <!-- ////////////////////////  LIDAAAAAR Fwd//////////////-->
+  <gazebo reference="Lidar_Fwd_Link">
+      <sensor name="gazebo_lidar_fwd" type="ray">
+      <visualize>true</visualize>
+      <update_rate>12.0</update_rate>
+
+      <plugin filename="libgazebo_ros_ray_sensor.so" name="gazebo_lidar_fwd">
+        <ros>
+            <remapping>~/out:=lidar_scan_fwd</remapping>
+        </ros>
+        <output_type>sensor_msgs/LaserScan</output_type>
+        <frame_name>Lidar_Fwd_Link</frame_name>
+      </plugin>
+
+      <ray>
+          <scan>
+            <horizontal>
+                <samples>360</samples>
+                <resolution>1</resolution>
+                <min_angle>0.00</min_angle>
+                <max_angle>3.14</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.120</min>
+            <max>3.5</max>
+            <resolution>0.015</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.01</stddev>
+          </noise>
+      </ray>
+      </sensor>
+      <material>Gazebo/Red</material>
+  </gazebo> 
+
+  <!-- ////////////////////////  LIDAAAAAR Back  //////////////-->
+
+  <gazebo reference="Lidar_Back_Link">
+    <sensor name="gazebo_lidar_back" type="ray">
+    <visualize>true</visualize>
+    <update_rate>12.0</update_rate>
+
+    <plugin filename="libgazebo_ros_ray_sensor.so" name="gazebo_lidar_back">
+      <ros>
+          <remapping>~/out:=lidar_scan_back</remapping>
+      </ros>
+      <output_type>sensor_msgs/LaserScan</output_type>
+      <frame_name>Lidar_Back_Link</frame_name>
+    </plugin>
+
+    <ray>
+        <scan>
+          <horizontal>
+              <samples>360</samples>
+              <resolution>1</resolution>
+              <min_angle>0.00</min_angle>
+              <max_angle>3.14</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.120</min>
+          <max>3.5</max>
+          <resolution>0.015</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+    </ray>
+    </sensor>
+    <material>Gazebo/Red</material>
+  </gazebo> 
+
+
+<!-- /////////////////  CAMERAAAAAAAAAAA Fwd/////////////////-->
+  <!-- refeerance should be same as the link name that is in ref to we are adding this sensor-->
+  <gazebo reference="Camera_Fwd_Link">  
+    <sensor type="camera" name="camera_scan_fwd">
+      <alwaysOn>true</alwaysOn>
+      <visualize>true</visualize>
+      <update_rate>30.0</update_rate>
+
+      <camera name="cam_fwd">
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image>
+          <width>800</width>
+          <height>800</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.02</near>
+          <far>300</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+
+      <plugin name="camera_driver_fwd" filename="libgazebo_ros_camera.so">
+          <updateRate>0.0</updateRate>
+          <cameraName>/camera_fwd</cameraName>
+          <imageTopicName>image_raw</imageTopicName>
+          <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+          <frameName>Camera_Fwd_Link</frameName>
+          <hackBaseline>0.07</hackBaseline>
+      </plugin>
+    </sensor>
+    <material>Gazebo/Blue</material>
+  </gazebo>
+
+  <!-- /////////////////  CAMERAAAAAAAAAAA  back///////// Had to add pseudolink to face backwards////////-->
+
+
+  <gazebo reference="Camera_Back_Link_Frame">
+    <sensor type="camera" name="camera_scan_back">
+      <alwaysOn>true</alwaysOn>
+      <visualize>true</visualize>
+      <update_rate>30.0</update_rate>
+
+      <camera name="cam_back">
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image>
+          <width>800</width>
+          <height>800</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.02</near>
+          <far>300</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+
+      <plugin name="camera_driver_bck" filename="libgazebo_ros_camera.so">
+          <updateRate>0.0</updateRate>
+          <cameraName>/camera_back</cameraName>
+          <imageTopicName>image_raw</imageTopicName>
+          <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+          <frameName>Camera_Back_Link_Frame</frameName>
+          <hackBaseline>0.07</hackBaseline>
+      </plugin>
+    </sensor>
+    <material>Gazebo/Blue</material>
+  </gazebo>
+
+
+  <gazebo>
+    <plugin name='diff_drive_fwd' filename='libgazebo_ros_diff_drive.so'>
+        <left_joint>Wheel_2_Joint</left_joint>
+        <right_joint>Wheel_1_Joint</right_joint>
+        <wheel_separation>0.43</wheel_separation>
+        <wheel_diameter>0.16</wheel_diameter>
+        <max_wheel_torque>30</max_wheel_torque>
+        <max_wheel_acceleration>1.50</max_wheel_acceleration>
+
+        <publish_odom>true</publish_odom>
+        <publish_odom_tf>true</publish_odom_tf>
+        <publish_wheel_tf>true</publish_wheel_tf>
+
+        <odometry_frame>base_footprint</odometry_frame>
+        <robot_base_frame>Chassis</robot_base_frame>
+    </plugin>
+
+    <plugin name='diff_drive_back' filename='libgazebo_ros_diff_drive.so'>
+        <left_joint>Wheel_3_Joint</left_joint>
+        <right_joint>Wheel_4_Joint</right_joint>
+        <wheel_separation>0.43</wheel_separation>
+        <wheel_diameter>0.16</wheel_diameter>
+        <max_wheel_torque>30</max_wheel_torque>
+        <max_wheel_acceleration>1.50</max_wheel_acceleration>
+
+        <publish_odom>true</publish_odom>
+        <publish_odom_tf>true</publish_odom_tf>
+        <publish_wheel_tf>true</publish_wheel_tf>
+
+        <odometry_frame>base_footprint</odometry_frame>
+        <robot_base_frame>Chassis</robot_base_frame>
+    </plugin>
+  </gazebo>
+
+
+</robot>

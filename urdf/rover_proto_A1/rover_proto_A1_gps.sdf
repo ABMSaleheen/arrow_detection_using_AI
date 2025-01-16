@@ -1,0 +1,598 @@
+<sdf version='1.7'>
+  <model name='rover_proto_A1_gps'>
+    <link name='Chassis'>
+      <inertial>
+        <pose>-0.003619 -4e-06 -0.025334 0 -0 0</pose>
+        <mass>18.0919</mass>
+        <inertia>
+          <ixx>0.190571</ixx>
+          <ixy>-3.70553e-06</ixy>
+          <ixz>0.00402853</ixz>
+          <iyy>1.55584</iyy>
+          <iyz>-8.33152e-06</iyz>
+          <izz>1.731</izz>
+        </inertia>
+      </inertial>
+      <collision name='Chassis_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://line_following_rover/urdf/rover_proto_A1/meshes/Chassis.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='Chassis_fixed_joint_lump__Camera_Back_Link_collision_1'>
+        <pose>-0.50128 0 0.046965 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://line_following_rover/urdf/rover_proto_A1/meshes/Camera_Back_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='Chassis_fixed_joint_lump__Camera_Fwd_Link_collision_2'>
+        <pose>0.49872 0 0.046965 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://line_following_rover/urdf/rover_proto_A1/meshes/Camera_Fwd_Link.STL</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <friction>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <collision name='Chassis_fixed_joint_lump__Lidar_Back_Link_collision_3'>
+        <pose>-0.34128 0 0.166 0 -0 1.57</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://line_following_rover/urdf/rover_proto_A1/meshes/Lidar_Back_Link.STL</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <friction>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <collision name='Chassis_fixed_joint_lump__Lidar_Fwd_Link_collision_4'>
+        <pose>0.33872 0 0.116 0 0 -1.57</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://line_following_rover/urdf/rover_proto_A1/meshes/Lidar_Fwd_Link.STL</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <friction>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <collision name='Chassis_fixed_joint_lump__Lights_Back_Link_collision_5'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://line_following_rover/urdf/rover_proto_A1/meshes/Lights_Back_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='Chassis_fixed_joint_lump__Lights_Fwd_Link_collision_6'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://line_following_rover/urdf/rover_proto_A1/meshes/Lights_Fwd_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='Chassis_fixed_joint_lump__Lights_Left_Link_collision_7'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://line_following_rover/urdf/rover_proto_A1/meshes/Lights_Left_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='Chassis_fixed_joint_lump__Lights_Right_Link_collision_8'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://line_following_rover/urdf/rover_proto_A1/meshes/Lights_Right_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='Chassis_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://line_following_rover/urdf/rover_proto_A1/meshes/Chassis.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='Chassis_fixed_joint_lump__Camera_Back_Link_visual_1'>
+        <pose>-0.50128 0 0.046965 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://line_following_rover/urdf/rover_proto_A1/meshes/Camera_Back_Link.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='Chassis_fixed_joint_lump__Camera_Fwd_Link_visual_2'>
+        <pose>0.49872 0 0.046965 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://line_following_rover/urdf/rover_proto_A1/meshes/Camera_Fwd_Link.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <name>Gazebo/Blue</name>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+          </script>
+        </material>
+      </visual>
+      <visual name='Chassis_fixed_joint_lump__Lidar_Back_Link_visual_3'>
+        <pose>-0.34128 0 0.166 0 -0 1.57</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://line_following_rover/urdf/rover_proto_A1/meshes/Lidar_Back_Link.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <name>Gazebo/Red</name>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+          </script>
+        </material>
+      </visual>
+      <visual name='Chassis_fixed_joint_lump__Lidar_Fwd_Link_visual_4'>
+        <pose>0.33872 0 0.116 0 0 -1.57</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://line_following_rover/urdf/rover_proto_A1/meshes/Lidar_Fwd_Link.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <name>Gazebo/Red</name>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+          </script>
+        </material>
+      </visual>
+      <visual name='Chassis_fixed_joint_lump__Lights_Back_Link_visual_5'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://line_following_rover/urdf/rover_proto_A1/meshes/Lights_Back_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='Chassis_fixed_joint_lump__Lights_Fwd_Link_visual_6'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://line_following_rover/urdf/rover_proto_A1/meshes/Lights_Fwd_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='Chassis_fixed_joint_lump__Lights_Left_Link_visual_7'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://line_following_rover/urdf/rover_proto_A1/meshes/Lights_Left_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='Chassis_fixed_joint_lump__Lights_Right_Link_visual_8'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://line_following_rover/urdf/rover_proto_A1/meshes/Lights_Right_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <sensor name='camera_scan_back' type='camera'>
+        <visualize>1</visualize>
+        <update_rate>30</update_rate>
+        <camera name='cam_back'>
+          <horizontal_fov>1.39626</horizontal_fov>
+          <image>
+            <width>800</width>
+            <height>800</height>
+            <format>R8G8B8</format>
+          </image>
+          <clip>
+            <near>0.02</near>
+            <far>300</far>
+          </clip>
+          <noise>
+            <type>gaussian</type>
+            <mean>0</mean>
+            <stddev>0.007</stddev>
+          </noise>
+        </camera>
+        <plugin name='camera_driver_bck' filename='libgazebo_ros_camera.so'>
+          <updateRate>0.0</updateRate>
+          <cameraName>/camera_back</cameraName>
+          <imageTopicName>image_raw</imageTopicName>
+          <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+          <frameName>Camera_Back_Link_Frame</frameName>
+          <hackBaseline>0.07</hackBaseline>
+        </plugin>
+        <pose>-0.50128 0 0.046965 0 -0 -3.14159</pose>
+        <alwaysOn>1</alwaysOn>
+      </sensor>
+      <sensor name='camera_scan_fwd' type='camera'>
+        <visualize>1</visualize>
+        <update_rate>30</update_rate>
+        <camera name='cam_fwd'>
+          <horizontal_fov>1.39626</horizontal_fov>
+          <image>
+            <width>800</width>
+            <height>800</height>
+            <format>R8G8B8</format>
+          </image>
+          <clip>
+            <near>0.02</near>
+            <far>300</far>
+          </clip>
+          <noise>
+            <type>gaussian</type>
+            <mean>0</mean>
+            <stddev>0.007</stddev>
+          </noise>
+        </camera>
+        <plugin name='camera_driver_fwd' filename='libgazebo_ros_camera.so'>
+          <updateRate>0.0</updateRate>
+          <cameraName>/camera_fwd</cameraName>
+          <imageTopicName>image_raw</imageTopicName>
+          <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+          <frameName>Camera_Fwd_Link</frameName>
+          <hackBaseline>0.07</hackBaseline>
+        </plugin>
+        <pose>0.49872 0 0.046965 0 -0 0</pose>
+        <alwaysOn>1</alwaysOn>
+      </sensor>
+      <sensor name='gazebo_lidar_back' type='ray'>
+        <visualize>1</visualize>
+        <update_rate>12</update_rate>
+        <plugin name='gazebo_lidar_back' filename='libgazebo_ros_ray_sensor.so'>
+          <ros>
+            <remapping>~/out:=lidar_scan_back</remapping>
+          </ros>
+          <output_type>sensor_msgs/LaserScan</output_type>
+          <frame_name>Lidar_Back_Link</frame_name>
+        </plugin>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>360</samples>
+              <resolution>1</resolution>
+              <min_angle>0</min_angle>
+              <max_angle>3.14</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.12</min>
+            <max>3.5</max>
+            <resolution>0.015</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0</mean>
+            <stddev>0.01</stddev>
+          </noise>
+        </ray>
+        <pose>-0.34128 0 0.166 0 -0 1.57</pose>
+      </sensor>
+      <sensor name='gazebo_lidar_fwd' type='ray'>
+        <visualize>1</visualize>
+        <update_rate>12</update_rate>
+        <plugin name='gazebo_lidar_fwd' filename='libgazebo_ros_ray_sensor.so'>
+          <ros>
+            <remapping>~/out:=lidar_scan_fwd</remapping>
+          </ros>
+          <output_type>sensor_msgs/LaserScan</output_type>
+          <frame_name>Lidar_Fwd_Link</frame_name>
+        </plugin>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>360</samples>
+              <resolution>1</resolution>
+              <min_angle>0</min_angle>
+              <max_angle>3.14</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.12</min>
+            <max>3.5</max>
+            <resolution>0.015</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0</mean>
+            <stddev>0.01</stddev>
+          </noise>
+        </ray>
+        <pose>0.33872 0 0.116 0 0 -1.57</pose>
+      </sensor>
+    </link>
+    <joint name='Wheel_1_Joint' type='revolute'>
+      <pose relative_to='Chassis'>0.34872 -0.215 -0.04 1.5708 -0 0</pose>
+      <parent>Chassis</parent>
+      <child>Wheel_1_Link</child>
+      <axis>
+        <xyz>0 0 -1</xyz>
+        <limit>
+          <effort>10</effort>
+          <velocity>12</velocity>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <damping>0.25</damping>
+          <friction>0.5</friction>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='Wheel_1_Link'>
+      <pose relative_to='Wheel_1_Joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 -0 -0.016853 0 -0 0</pose>
+        <mass>0.456818</mass>
+        <inertia>
+          <ixx>0.000768197</ixx>
+          <ixy>4.1359e-21</ixy>
+          <ixz>-4.91914e-19</ixz>
+          <iyy>0.000768197</iyy>
+          <iyz>2.33003e-19</iyz>
+          <izz>0.00134492</izz>
+        </inertia>
+      </inertial>
+      <collision name='Wheel_1_Link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://line_following_rover/urdf/rover_proto_A1/meshes/Wheel_1_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='Wheel_1_Link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://line_following_rover/urdf/rover_proto_A1/meshes/Wheel_1_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='Wheel_2_Joint' type='revolute'>
+      <pose relative_to='Chassis'>0.34872 0.215 -0.04 1.5708 -0 0</pose>
+      <parent>Chassis</parent>
+      <child>Wheel_2_Link</child>
+      <axis>
+        <xyz>0 0 -1</xyz>
+        <limit>
+          <effort>10</effort>
+          <velocity>12</velocity>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <damping>0.25</damping>
+          <friction>0.5</friction>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='Wheel_2_Link'>
+      <pose relative_to='Wheel_2_Joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>-0 0 0.016853 0 -0 0</pose>
+        <mass>0.456818</mass>
+        <inertia>
+          <ixx>0.000768197</ixx>
+          <ixy>1.02115e-18</ixy>
+          <ixz>-7.60711e-19</ixz>
+          <iyy>0.000768197</iyy>
+          <iyz>3.64043e-19</iyz>
+          <izz>0.00134492</izz>
+        </inertia>
+      </inertial>
+      <collision name='Wheel_2_Link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://line_following_rover/urdf/rover_proto_A1/meshes/Wheel_2_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='Wheel_2_Link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://line_following_rover/urdf/rover_proto_A1/meshes/Wheel_2_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='Wheel_3_Joint' type='revolute'>
+      <pose relative_to='Chassis'>-0.35128 0.21499 -0.04 1.5708 -0 0</pose>
+      <parent>Chassis</parent>
+      <child>Wheel_3_Link</child>
+      <axis>
+        <xyz>0 0 -1</xyz>
+        <limit>
+          <effort>10</effort>
+          <velocity>12</velocity>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <damping>0.25</damping>
+          <friction>0.5</friction>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='Wheel_3_Link'>
+      <pose relative_to='Wheel_3_Joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>-0 -0 0.016853 0 -0 0</pose>
+        <mass>0.456818</mass>
+        <inertia>
+          <ixx>0.000768197</ixx>
+          <ixy>-1.88597e-19</ixy>
+          <ixz>-4.93382e-19</ixz>
+          <iyy>0.000768197</iyy>
+          <iyz>-2.11063e-19</iyz>
+          <izz>0.00134492</izz>
+        </inertia>
+      </inertial>
+      <collision name='Wheel_3_Link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://line_following_rover/urdf/rover_proto_A1/meshes/Wheel_3_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='Wheel_3_Link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://line_following_rover/urdf/rover_proto_A1/meshes/Wheel_3_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='Wheel_4_Joint' type='revolute'>
+      <pose relative_to='Chassis'>-0.35128 -0.215 -0.04 1.5708 -0 0</pose>
+      <parent>Chassis</parent>
+      <child>Wheel_4_Link</child>
+      <axis>
+        <xyz>0 0 -1</xyz>
+        <limit>
+          <effort>10</effort>
+          <velocity>12</velocity>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <damping>0.25</damping>
+          <friction>0.5</friction>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='Wheel_4_Link'>
+      <pose relative_to='Wheel_4_Joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 -0.016853 0 -0 0</pose>
+        <mass>0.456818</mass>
+        <inertia>
+          <ixx>0.000768197</ixx>
+          <ixy>-7.84271e-19</ixy>
+          <ixz>-6.61935e-19</ixz>
+          <iyy>0.000768197</iyy>
+          <iyz>-2.6149e-19</iyz>
+          <izz>0.00134492</izz>
+        </inertia>
+      </inertial>
+      <collision name='Wheel_4_Link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://line_following_rover/urdf/rover_proto_A1/meshes/Wheel_4_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='Wheel_4_Link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://line_following_rover/urdf/rover_proto_A1/meshes/Wheel_4_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <static>0</static>
+    <plugin name='diff_drive_fwd' filename='libgazebo_ros_diff_drive.so'>
+      <left_joint>Wheel_2_Joint</left_joint>
+      <right_joint>Wheel_1_Joint</right_joint>
+      <wheel_separation>0.43</wheel_separation>
+      <wheel_diameter>0.16</wheel_diameter>
+      <max_wheel_torque>30</max_wheel_torque>
+      <max_wheel_acceleration>1.50</max_wheel_acceleration>
+      <publish_odom>1</publish_odom>
+      <publish_odom_tf>1</publish_odom_tf>
+      <publish_wheel_tf>1</publish_wheel_tf>
+      <odometry_frame>base_footprint</odometry_frame>
+      <robot_base_frame>Chassis</robot_base_frame>
+    </plugin>
+    <plugin name='diff_drive_back' filename='libgazebo_ros_diff_drive.so'>
+      <left_joint>Wheel_3_Joint</left_joint>
+      <right_joint>Wheel_4_Joint</right_joint>
+      <wheel_separation>0.43</wheel_separation>
+      <wheel_diameter>0.16</wheel_diameter>
+      <max_wheel_torque>30</max_wheel_torque>
+      <max_wheel_acceleration>1.50</max_wheel_acceleration>
+      <publish_odom>1</publish_odom>
+      <publish_odom_tf>1</publish_odom_tf>
+      <publish_wheel_tf>1</publish_wheel_tf>
+      <odometry_frame>base_footprint</odometry_frame>
+      <robot_base_frame>Chassis</robot_base_frame>
+    </plugin>
+
+    <include>
+      <uri>model://gps</uri>
+      <pose>0 0 0.34 0 0 0</pose>
+      <name>gps_rover</name>
+    </include>
+    <joint name='gps_joint' type='fixed'>
+      <child>gps::link</child>
+      <parent>Chassis</parent>
+    </joint>
+
+  </model>
+</sdf>
