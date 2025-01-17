@@ -39,14 +39,15 @@ endif()
 add_executable(image_saver_node src/image_save.cpp)
 ament_target_dependencies(image_saver_node rclcpp std_msgs geometry_msgs sensor_msgs OpenCV cv_bridge)
 
-# add_executable(autonomous_driving_node src/autonomous_driving.cpp)
-# ament_target_dependencies(autonomous_driving_node rclcpp std_msgs sensor_msgs geometry_msgs OpenCV cv_bridge)
+add_executable(autonomous_driving_AI_node src/autonomous_driving_AI.cpp)
+ament_target_dependencies(autonomous_driving_AI_node rclcpp std_msgs sensor_msgs geometry_msgs OpenCV cv_bridge)
 
 
 
 #----------------  Install each executable to lib ---------------------------------
 
 install(TARGETS image_saver_node
+        autonomous_driving_AI_node
         DESTINATION lib/${PROJECT_NAME}
       )
 
@@ -75,5 +76,11 @@ install(DIRECTORY worlds
 install(DIRECTORY launch
   DESTINATION share/${PROJECT_NAME}
 )
+
+# Install AI model files
+install(DIRECTORY training_models
+  DESTINATION share/${PROJECT_NAME}
+)
+
 
 ament_package()

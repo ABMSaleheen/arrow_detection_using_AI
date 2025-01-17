@@ -43,12 +43,12 @@ private:
         try {
             cv::Mat frame = cv_bridge::toCvCopy(msg_vid, "bgr8")->image;
 
-            // // Resize frame to 640x480
             cv::Mat resized_frame;
             cv::Mat gray;
             cv::Mat blurred_img;
             cv:: Mat mask;
 
+            // // Resize frame to 640x480
             cv::resize(frame, resized_frame, cv::Size(640, 480));
 
             uint8_t lower_val = 19;
