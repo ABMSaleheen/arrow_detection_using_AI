@@ -23,12 +23,12 @@ public:
 
 
     vid_subscriber = this->create_subscription<sensor_msgs::msg::Image>(
-                  "/camera_scan_fwd/image_raw", 20, std::bind(&AutonmousAINode::image_process_callback, 
+                  "/camera_scan_fwd/image_raw", 40, std::bind(&AutonmousAINode::image_process_callback, 
                   this,std::placeholders::_1));
 
-    publisher_vel = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel",40);
-    // timer_vel_pub = this->create_wall_timer(std::chrono::microseconds(1000),
-    //             std::bind(&AutonmousAINode::send_cmd_vel, this));
+    publisher_vel = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel",30);
+    timer_vel_pub = this->create_wall_timer(std::chrono::microseconds(1000),
+                std::bind(&AutonmousAINode::send_cmd_vel, this));
 
 
   }
@@ -43,18 +43,21 @@ private:
 
   int16_t center_frame_x;
   int16_t center_frame_y;
-  int16_t last_pt_caution;
 
-  int row_of_interest = 132;
-  int row_of_lin_vel = row_of_interest - 10;
+  int arrow_left_edge;
+  int arrow_right_edge;
+  int arrow_mid_point;
+  
+
+  int row_of_interest = 170;
+  int row_of_lin_vel = row_of_interest - 5;
   int row_of_caution = 04;
 
 
   float mid_pt_error = 0.0f;
   float mid_pt_lin_vel_error = 0.0f;
 
-  // std::vector<int16_t> prev_edge;
-  // std::vector<int16_t> prev_edge_lin_vel;
+  float edge_pxl_percentage;
 
   void image_process_callback(const sensor_msgs::msg::Image::SharedPtr msg_vid) {
 
@@ -87,21 +90,12 @@ private:
 
 
 
-    //// Processing mid points....................////
+    // Processing mid points....................////
     center_frame_x = canny.cols/2;
     center_frame_y = canny.rows/2;
 
-    
 
-    if (row_of_interest >= 0 && row_of_interest < canny.rows &&
-      center_frame_x >= 0 && center_frame_x < canny.cols) {
-        canny.at<uint8_t>(row_of_interest - 1, center_frame_x) = 255;
-        canny.at<uint8_t>(row_of_interest, center_frame_x) = 255;
-        canny.at<uint8_t>(row_of_interest + 1, center_frame_x) = 255;
-    }
-
-    canny.at<uint8_t>(row_of_lin_vel, center_frame_x) = 255;
-
+    // Describe RoI and prepare final framing.................... 
     int roiWidth = 380;
     int roiHeight = 240;
     int roi_start_x = center_frame_x - roiWidth / 2;
@@ -112,8 +106,6 @@ private:
     
     cv::Mat black_mask = cv::Mat::zeros(canny.size(), CV_8UC1); // Black mask on the whole frame
     cv::rectangle(black_mask, region_of_interest, cv::Scalar(255), cv::FILLED);  // White filled region on top of the black mask
-
-    // RCLCPP_INFO(this->get_logger(), "frame size-- %dx%d", canny.cols,canny.rows);
 
     cv::Mat roi_result;
     cv::bitwise_and(canny, black_mask, roi_result);
@@ -129,10 +121,31 @@ private:
     //             cv::FONT_HERSHEY_DUPLEX, 
     //             1.0, CV_RGB(255, 255, 255), 2);
 
+
+    auto [left_edge_point, right_edge_point] = find_non_zero_points(roi_result);
+    arrow_left_edge = left_edge_point, arrow_right_edge = right_edge_point; // use this control ang_vel wrt centre_x of frame.
+    arrow_mid_point = left_edge_point + (right_edge_point- left_edge_point)/2;
+
+    // std::cout << "Left:  " << left_edge_point<< "Right:  "<< right_edge_point << std::endl;
+
     vid_output = roi_result;
 
     // std::cout << "Frame size: " << vid_output.cols << "x" << vid_output.rows << std::endl;
-    std::cout << "Edge Percentage: " << find_edge_percentage(vid_output) << std::endl;
+
+    edge_pxl_percentage = find_edge_percentage(roi_result);
+    std::cout << "Edge Percentage: " << edge_pxl_percentage << std::endl;
+
+
+
+
+    if (row_of_interest >= 0 && row_of_interest < canny.rows &&
+      center_frame_x >= 0 && center_frame_x < canny.cols) {
+        vid_output.at<uint8_t>(row_of_interest - 1, center_frame_x) = 255;
+        vid_output.at<uint8_t>(row_of_interest, center_frame_x) = 255;
+        vid_output.at<uint8_t>(row_of_interest + 1, center_frame_x) = 255;
+    }
+
+    vid_output.at<uint8_t>(row_of_lin_vel, center_frame_x) = 255;
 
     cv::imshow("output", vid_output);
     if (cv::waitKey(1) == 27) {
@@ -141,16 +154,22 @@ private:
   }
 
 
-// def find_edge_percentage(contour_image):
-//     # Calculate the total number of pixels in the image
-//     total_pixels = contour_image.shape[0] * contour_image.shape[1]
+  std::tuple<int,int> find_non_zero_points(cv::Mat image){
+    std::vector<cv::Point> edge_points;
 
-//     edge_pixels = cv2.countNonZero(contour_image)
+    cv::findNonZero(image, edge_points);
+    std::vector<int> columns;
 
-//     # Calculate the percentage of edge pixels
-//     edge_percentage = (edge_pixels / total_pixels) * 100
+    for (const auto& point : edge_points){
+      columns.push_back(point.x);
+    }
 
-//     return edge_percentage
+    int left_edge_point_pos =  *std::min_element(columns.begin(),columns.end());
+    int right_edge_point_pos = *std::max_element(columns.begin(),columns.end());
+
+    return {left_edge_point_pos, right_edge_point_pos};
+  }
+
 
   float find_edge_percentage(cv::Mat image){
     float total_pixels = image.rows* image.cols;
@@ -166,71 +185,61 @@ private:
     current_time = this->now();
     float dt = (prev_time.nanoseconds()>0) ? (current_time - prev_time).seconds() : .001 ;
     prev_time = current_time;
-    RCLCPP_INFO(this->get_logger(), "dt =>>  %f", dt);
+    // RCLCPP_INFO(this->get_logger(), "dt =>>  %f", dt);
 
     // float prev_error;
 
     float error = current_state - ref_point;
     float error_der = (error - prev_error)/dt;
 
-    RCLCPP_INFO(this->get_logger(), "Error => %f, Previous Error => %f, Error_d => %f", error, prev_error, error_der);
+    // RCLCPP_INFO(this->get_logger(), "Error => %f, Previous Error => %f, Error_d => %f", error, prev_error, error_der);
 
     float feedback = kp*error + kd*error_der;
     // prev_error = (abs(error) > 0) ? (error) : 0.0;
     prev_error = error;
-
     return feedback;
   }
 
 
-  void follow_track(){
+  void track_mid_edges(){
     // current_time = this->now();
       
     // if (velocity_lin == 0 && current_time.nanoseconds() == 0.0f){
     //   velocity_lin = 0.65;
     // }
-
-    // float control_output_ang_vel = PID_control(mid_point_edge, center_frame_x, 0.10f, 0.540f, 0.0f);
-    // velocity_ang = std::clamp(control_output_ang_vel, -1.57f, 1.57f);
-
+    if (arrow_left_edge > 240 && arrow_right_edge < 400){
+      float control_output_ang_vel = PID_control(arrow_mid_point, center_frame_x, 0.10f, 0.540f, 0.0f);
+      velocity_ang = std::clamp(control_output_ang_vel, -1.57f, 1.57f);
+    }
+    else{
+      velocity_ang = 0.0;
+    }
     float control_output_lin_vel = PID_control(row_of_lin_vel, row_of_interest, 0.10f, 0.540f, 0.0f);
     velocity_lin = std::clamp(control_output_lin_vel, -0.7f, 0.7f);
 
-    if(action == "Caution- Take Right"){
+
+    // if (abs(arrow_mid_point-center_frame_x) < 5){
+    //   velocity_ang = 0.0;
+    // }
+    if (edge_pxl_percentage > 0.001){
       velocity_lin = 0.0;
-      velocity_ang = -1.5;
     }
+    // if(action == "Caution- Take Right"){
+    //   velocity_lin = 0.0;
+    //   velocity_ang = -1.5;
+    // }
     
-    else if(action == "Caution- Take Left" ){
-      velocity_lin = 0.0;
-      velocity_ang = 1.5;
-    }
-
-    // else if(control_output_ang_vel == 0.0f) {
-    //   action = "Going Straight";
-    //   // velocity_lin = 0.65;
+    // else if(action == "Caution- Take Left" ){
+    //   velocity_lin = 0.0;
+    //   velocity_ang = 1.5;
     // }
-
-    // else if (control_output_ang_vel < 0.0f){
-    //   action = "Steering Right";
-    //   // velocity_lin = 0.55;
-    // }
-    // else if (control_output_ang_vel > 0.0f){
-    //   action = "Steering Left";
-    //   // velocity_lin = 0.55;
-    // }
-
-    // else if(action == "Tracking Dummy (prev edge)"){
-    //   velocity_lin = -0.30;
-    // }
-
 
   }
 
   void send_cmd_vel(){
     // velocity_lin = 0.3f;
 
-    follow_track();
+    track_mid_edges();
     geometry_msgs::msg::Twist velocity_cmd;
 
     velocity_cmd.linear.x = velocity_lin;
