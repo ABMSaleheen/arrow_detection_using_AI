@@ -43,13 +43,15 @@ add_executable(autonomous_driving_AI_node src/autonomous_driving_AI.cpp)
 ament_target_dependencies(autonomous_driving_AI_node rclcpp std_msgs sensor_msgs geometry_msgs OpenCV cv_bridge)
 
 
-
 #----------------  Install each executable to lib ---------------------------------
 
 install(TARGETS image_saver_node
         autonomous_driving_AI_node
-        DESTINATION lib/${PROJECT_NAME}
-      )
+        DESTINATION lib/${PROJECT_NAME})
+
+# Python Nodes (handled as scripts)
+install(PROGRAMS scripts/decision_model.py
+        DESTINATION lib/${PROJECT_NAME})
 
 
 # Include directories

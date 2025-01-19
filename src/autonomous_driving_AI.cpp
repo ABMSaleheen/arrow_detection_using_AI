@@ -30,7 +30,6 @@ public:
     timer_vel_pub = this->create_wall_timer(std::chrono::microseconds(1000),
                 std::bind(&AutonmousAINode::send_cmd_vel, this));
 
-
   }
 
 private:

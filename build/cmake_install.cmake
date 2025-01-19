@@ -83,6 +83,10 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/arrow_detection" TYPE PROGRAM FILES "/home/saleheen_linux/others/ros_2_Learning/ros2_ws_cpp/src/arrow_detection/scripts/decision_model.py")
+endif()
+
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/arrow_detection" TYPE DIRECTORY FILES "/home/saleheen_linux/others/ros_2_Learning/ros2_ws_cpp/src/arrow_detection/include/")
 endif()
 
