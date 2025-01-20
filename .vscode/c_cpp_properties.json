@@ -8,8 +8,6 @@
             "includePath": [
                 "/opt/ros/humble/include/**",
                 "/home/saleheen_linux/others/ros_2_Learning/ros2_ws_cpp/install/arrow_detection/include/**",
-                "/home/saleheen_linux/others/ros_2_Learning/ros2_ws_cpp/src/cpp_pubsub/include/**",
-                "/home/saleheen_linux/others/ros_2_Learning/ros2_ws_cpp/src/rover_cpp/include/**",
                 "/home/saleheen_linux/others/ros_2_Learning/ros2_ws_cpp/src/arrow_detection/include/**",
                 "/usr/include/opencv4/**",
                 "/usr/local/include/**",
@@ -22,7 +20,7 @@
             "cStandard": "c11",
             "cppStandard": "c++17",
             "configurationProvider": "ms-vscode.cmake-tools",
-            "compileCommands": "/home/saleheen_linux/others/ros_2_Learning/ros2_ws_cpp/build/compile_commands.json"
+            "compileCommands": "${workspaceFolder}/build/compile_commands.json"
         }
     ],
     "version": 4

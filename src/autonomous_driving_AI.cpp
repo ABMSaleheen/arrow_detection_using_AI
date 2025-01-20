@@ -10,7 +10,7 @@
 #include <cv_bridge/cv_bridge.h>
 
 #include <opencv2/opencv.hpp>
-#include <NumCpp.hpp>
+// #include <NumCpp.hpp>
 
 
 
@@ -29,6 +29,8 @@ public:
     publisher_vel = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel",30);
     timer_vel_pub = this->create_wall_timer(std::chrono::microseconds(1000),
                 std::bind(&AutonmousAINode::send_cmd_vel, this));
+
+    publisher_img = this->create_publisher<sensor_msgs::msg::Image>("gray_scale_img",10);
 
   }
 
@@ -57,6 +59,7 @@ private:
   float mid_pt_lin_vel_error = 0.0f;
 
   float edge_pxl_percentage;
+  cv::Mat roi_result;
 
   void image_process_callback(const sensor_msgs::msg::Image::SharedPtr msg_vid) {
 
@@ -106,7 +109,7 @@ private:
     cv::Mat black_mask = cv::Mat::zeros(canny.size(), CV_8UC1); // Black mask on the whole frame
     cv::rectangle(black_mask, region_of_interest, cv::Scalar(255), cv::FILLED);  // White filled region on top of the black mask
 
-    cv::Mat roi_result;
+    
     cv::bitwise_and(canny, black_mask, roi_result);
 
 
@@ -200,7 +203,7 @@ private:
   }
 
 
-  void track_mid_edges(){
+  void track_mid_point_of_edges(){
     // current_time = this->now();
       
     // if (velocity_lin == 0 && current_time.nanoseconds() == 0.0f){
@@ -216,29 +219,20 @@ private:
     float control_output_lin_vel = PID_control(row_of_lin_vel, row_of_interest, 0.10f, 0.540f, 0.0f);
     velocity_lin = std::clamp(control_output_lin_vel, -0.7f, 0.7f);
 
-
     // if (abs(arrow_mid_point-center_frame_x) < 5){
     //   velocity_ang = 0.0;
     // }
     if (edge_pxl_percentage > 0.001){
       velocity_lin = 0.0;
+      img_pub_callback(roi_result);
     }
-    // if(action == "Caution- Take Right"){
-    //   velocity_lin = 0.0;
-    //   velocity_ang = -1.5;
-    // }
-    
-    // else if(action == "Caution- Take Left" ){
-    //   velocity_lin = 0.0;
-    //   velocity_ang = 1.5;
-    // }
 
   }
 
   void send_cmd_vel(){
     // velocity_lin = 0.3f;
 
-    track_mid_edges();
+    track_mid_point_of_edges();
     geometry_msgs::msg::Twist velocity_cmd;
 
     velocity_cmd.linear.x = velocity_lin;
@@ -248,10 +242,25 @@ private:
     publisher_vel-> publish(velocity_cmd);
   }
 
+
+  void img_pub_callback(cv::Mat image){
+
+    if (image.channels() != 1) {
+      RCLCPP_ERROR(this->get_logger(), "Input image is not grayscale. Ensure it has one channel.");
+      return;
+    }
+
+    cv_bridge::CvImagePtr img_ptr;
+    sensor_msgs::msg::Image::SharedPtr msg = cv_bridge::CvImage(std_msgs::msg::Header(), "mono8", image).toImageMsg();
+
+    publisher_img -> publish(*msg);
+  }
+
   // cv::VideoWriter video_writer_;
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_vel;
   rclcpp::TimerBase::SharedPtr timer_vel_pub;
   rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr vid_subscriber;
+  rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher_img;
 };
 
 int main(int argc, char *argv[]) {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Site BuildName="(empty)"
-	BuildStamp="20250119-0956-Experimental"
+	BuildStamp="20250120-1017-Experimental"
 	Name="saleheen-ROG-Linux"
 	Generator="ctest-3.22.1"
 	CompilerName="/usr/bin/g++"
@@ -21,14 +21,14 @@
 	TotalVirtualMemory="0"
 	TotalPhysicalMemory="31508"
 	LogicalProcessorsPerPhysical="2"
-	ProcessorClockFrequency="3568.12"
+	ProcessorClockFrequency="4292.19"
 	>
 	<Testing>
-		<StartDateTime>Jan 19 20:18 CET</StartDateTime>
-		<StartTestTime>1737314321</StartTestTime>
+		<StartDateTime>Jan 20 11:17 CET</StartDateTime>
+		<StartTestTime>1737368276</StartTestTime>
 		<TestList/>
-		<EndDateTime>Jan 19 20:18 CET</EndDateTime>
-		<EndTestTime>1737314321</EndTestTime>
+		<EndDateTime>Jan 20 11:17 CET</EndDateTime>
+		<EndTestTime>1737368276</EndTestTime>
 		<ElapsedMinutes>0</ElapsedMinutes>
 	</Testing>
 </Site>

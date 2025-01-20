@@ -8,7 +8,7 @@
   <license>TODO: License declaration</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
-  <!-- <buildtool_depend>ament_python</buildtool_depend>
+  <buildtool_depend>ament_cmake_python</buildtool_depend> <!--  https://docs.ros.org/en/foxy/How-To-Guides/Ament-CMake-Python-Documentation.html -->
 
   <depend>rclcpp</depend>
   <depend>cv_bridge</depend>
@@ -17,8 +17,7 @@
   <depend>sensor_msgs</depend>
   <depend>nav_msgs</depend>
 
-  <exec_depend>rclpy</exec_depend> -->
-
+  <exec_depend>rclpy</exec_depend>
 
 
   <test_depend>ament_lint_auto</test_depend>

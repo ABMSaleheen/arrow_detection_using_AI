@@ -3642,6 +3642,14 @@
 		},
 		{
 			"isExternal" : true,
+			"path" : "/opt/ros/humble/share/ament_cmake_python/cmake/ament_cmake_pythonConfig-version.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/ros/humble/share/ament_cmake_python/cmake/ament_cmake_pythonConfig.cmake"
+		},
+		{
+			"isExternal" : true,
 			"path" : "/opt/ros/humble/share/ament_lint_auto/cmake/ament_lint_autoConfig-version.cmake"
 		},
 		{
