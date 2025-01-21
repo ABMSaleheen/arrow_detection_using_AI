@@ -19,6 +19,11 @@ find_package(sensor_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(cv_bridge REQUIRED)
 
+find_package(eigen3_cmake_module REQUIRED)
+find_package(Eigen3 REQUIRED)
+include_directories(${EIGEN3_INCLUDE_DIR}) 
+
+
 find_package(ament_cmake_python REQUIRED)
 
 if(BUILD_TESTING)
@@ -34,12 +39,19 @@ if(BUILD_TESTING)
 endif()
 
 
+# Include directories
+include_directories(include/
+                    ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}) 
+include_directories( ${OpenCV_INCLUDE_DIRS} )
+
+
+
 
 add_executable(image_saver_node src/image_save.cpp)
 ament_target_dependencies(image_saver_node rclcpp std_msgs geometry_msgs sensor_msgs OpenCV cv_bridge)
 
-add_executable(autonomous_driving_AI_node src/autonomous_driving_AI.cpp)
-ament_target_dependencies(autonomous_driving_AI_node rclcpp std_msgs sensor_msgs geometry_msgs OpenCV cv_bridge)
+add_executable(autonomous_driving_AI_node src/autonomous_driving_AI.cpp src/quaternion_operations.cpp)
+ament_target_dependencies(autonomous_driving_AI_node rclcpp std_msgs sensor_msgs geometry_msgs nav_msgs OpenCV cv_bridge Eigen3)
 
 
 #----------------  Install each executable to lib ---------------------------------
@@ -53,15 +65,9 @@ install(PROGRAMS scripts/decision_model.py
         DESTINATION lib/${PROJECT_NAME})
 
 
-# Include directories
-include_directories(include) 
-include_directories("/home/saleheen_linux/Libraries/NumCpp/include")
-include_directories( ${OpenCV_INCLUDE_DIRS} )
-
 # Install include directory
-install(DIRECTORY include/
-  DESTINATION include/${PROJECT_NAME}
-)
+install(DIRECTORY include/${PROJECT_NAME}/ 
+  DESTINATION include/${PROJECT_NAME})
 
 # Install URDF files
 install(DIRECTORY urdf

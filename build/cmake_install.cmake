@@ -87,7 +87,7 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/arrow_detection" TYPE DIRECTORY FILES "/home/saleheen_linux/others/ros_2_Learning/ros2_ws_cpp/src/arrow_detection/include/")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/arrow_detection" TYPE DIRECTORY FILES "/home/saleheen_linux/others/ros_2_Learning/ros2_ws_cpp/src/arrow_detection/include/arrow_detection/")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)

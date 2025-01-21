@@ -2,17 +2,24 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <stdint.h>
+#include <array>
 
 #include <rclcpp/rclcpp.hpp>
+
+#include <std_msgs/msg/float32_multi_array.hpp>
 #include <geometry_msgs/msg/twist.hpp>
+#include <geometry_msgs/msg/pose.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
 #include <sensor_msgs/msg/image.hpp>
 #include <cv_bridge/cv_bridge.h>
 
 #include <opencv2/opencv.hpp>
-// #include <NumCpp.hpp>
-
-
+#include "arrow_detection/quaternion_operations.hpp"
+#include <Eigen/Dense>
+#include <cmath>
+#include<nav_msgs/msg/odometry.hpp>
+using namespace Eigen;
 
 class AutonmousAINode : public rclcpp::Node {
 
@@ -30,8 +37,16 @@ public:
     timer_vel_pub = this->create_wall_timer(std::chrono::microseconds(1000),
                 std::bind(&AutonmousAINode::send_cmd_vel, this));
 
-    publisher_img = this->create_publisher<sensor_msgs::msg::Image>("gray_scale_img",10);
+    publisher_img = this->create_publisher<sensor_msgs::msg::Image>("autonomous_node/gray_scale_img",10);
 
+
+    subscriber_decision = this->create_subscription<std_msgs::msg::Float32MultiArray>(
+                  "decision_node/detected_direction", 10, std::bind(&AutonmousAINode::decision_process_callback, 
+                  this,std::placeholders::_1));
+
+    subscriber_odom_rover = this->create_subscription<nav_msgs::msg::Odometry>(
+        "/odom", rclcpp::SensorDataQoS(), std::bind(&AutonmousAINode::sub_odom_rover_calllback, this, std::placeholders::_1));
+    
   }
 
 private:
@@ -61,6 +76,14 @@ private:
   float edge_pxl_percentage;
   cv::Mat roi_result;
 
+  float detected_direction = -1.0; // # 0: Left # 1: Right
+  float confidence = -1.0;
+
+  Vector3d rover_pos;
+  Vector3d rover_orientation_E;
+  Quaterniond rover_orientation_q;
+  float rover_current_ang_vel;
+
   void image_process_callback(const sensor_msgs::msg::Image::SharedPtr msg_vid) {
 
     cv::Mat vid_output;
@@ -85,13 +108,6 @@ private:
     //-----------------------------# Boundaries Extraction----------------------
     cv::Canny(mask,canny, 40 , 10);
 
-    // cv::Mat canny = canny(cv::Range(r1, canny.rows), cv::Range(c1,canny.cols));  // Cropping
-
-    uint8_t pixel_value;
-    uint8_t pixel_value_lin_vel;
-
-
-
     // Processing mid points....................////
     center_frame_x = canny.cols/2;
     center_frame_y = canny.rows/2;
@@ -112,17 +128,15 @@ private:
     
     cv::bitwise_and(canny, black_mask, roi_result);
 
-
-    // cv::putText(roi_result, action, 
-    //             cv::Point(20, 80), 
-    //             cv::FONT_HERSHEY_DUPLEX, 
-    //             1.0, CV_RGB(255, 255, 255), 2);
-
-    // cv::putText(roi_result, std::to_string(velocity_lin), 
-    //             cv::Point(20, 120), 
-    //             cv::FONT_HERSHEY_DUPLEX, 
-    //             1.0, CV_RGB(255, 255, 255), 2);
-
+    if (detected_direction == 0.0){
+      action = "<---- LEFT";
+    }
+    else if (detected_direction== 1.0)
+    {
+      action = "RIGHT ---->";
+    }
+    // else{}
+    
 
     auto [left_edge_point, right_edge_point] = find_non_zero_points(roi_result);
     arrow_left_edge = left_edge_point, arrow_right_edge = right_edge_point; // use this control ang_vel wrt centre_x of frame.
@@ -135,9 +149,7 @@ private:
     // std::cout << "Frame size: " << vid_output.cols << "x" << vid_output.rows << std::endl;
 
     edge_pxl_percentage = find_edge_percentage(roi_result);
-    std::cout << "Edge Percentage: " << edge_pxl_percentage << std::endl;
-
-
+    // std::cout << "Edge Percentage: " << edge_pxl_percentage << std::endl;
 
 
     if (row_of_interest >= 0 && row_of_interest < canny.rows &&
@@ -146,8 +158,19 @@ private:
         vid_output.at<uint8_t>(row_of_interest, center_frame_x) = 255;
         vid_output.at<uint8_t>(row_of_interest + 1, center_frame_x) = 255;
     }
-
     vid_output.at<uint8_t>(row_of_lin_vel, center_frame_x) = 255;
+
+
+    cv::putText(vid_output, action, 
+                cv::Point(20, 80), 
+                cv::FONT_HERSHEY_DUPLEX, 
+                1.0, CV_RGB(255, 255, 255), 2);
+
+    // cv::putText(roi_result, std::to_string(velocity_lin), 
+    //             cv::Point(20, 120), 
+    //             cv::FONT_HERSHEY_DUPLEX, 
+    //             1.0, CV_RGB(255, 255, 255), 2);
+
 
     cv::imshow("output", vid_output);
     if (cv::waitKey(1) == 27) {
@@ -222,11 +245,45 @@ private:
     // if (abs(arrow_mid_point-center_frame_x) < 5){
     //   velocity_ang = 0.0;
     // }
-    if (edge_pxl_percentage > 0.001){
+    if (edge_pxl_percentage > 0.001 && rover_current_ang_vel < 0.008){
       velocity_lin = 0.0;
-      img_pub_callback(roi_result);
+      img_pub_callback(roi_result);  // Img pub to AI node
+
+      if(detected_direction != -1.0){
+        find_des_rover_orientation_q(rover_orientation_q);
+      }
+
+      // add vel_lin.
     }
 
+  }
+
+  Quaterniond find_des_rover_orientation_q(Quaterniond rover_orientation_q){
+      // receive orientation_q  
+      // --- Being received by the callback func below
+
+      // convert to Euler.
+      rover_orientation_E = quat_to_euler(rover_orientation_q);
+
+      // based on detected direction- define desired_rover_yaw.
+      double desired_rover_yaw ;
+      Vector3d desired_rover_orientation_E;
+      desired_rover_orientation_E.x() = rover_orientation_E.x();
+      desired_rover_orientation_E.y() = rover_orientation_E.y();
+      
+      if (detected_direction==0){
+        desired_rover_orientation_E.z() = rover_orientation_E.z() + M_PI / 2;
+      }
+      if (detected_direction==1){
+        desired_rover_orientation_E.z() = rover_orientation_E.z() - M_PI / 2;
+      }
+
+      // pack yaw in Euler and convert back to q to send as desired quaternion.
+      Quaterniond desired_rover_q = euler_to_quat(desired_rover_orientation_E);
+      std::cout << "Current q" << rover_orientation_q << std::endl;
+      std::cout << "Desired q" << desired_rover_q << std::endl;
+
+      // Use pid to find ang_vel needed to go from current to desired_yaw
   }
 
   void send_cmd_vel(){
@@ -234,6 +291,11 @@ private:
 
     track_mid_point_of_edges();
     geometry_msgs::msg::Twist velocity_cmd;
+    geometry_msgs::msg::Pose pose_cmd;
+    // pose_cmd.orientation.w = ;
+
+    // pose_cmd.position.x
+
 
     velocity_cmd.linear.x = velocity_lin;
     velocity_cmd.angular.z = velocity_ang;
@@ -256,11 +318,43 @@ private:
     publisher_img -> publish(*msg);
   }
 
+  void decision_process_callback(std_msgs::msg::Float32MultiArray msg){
+    detected_direction = msg.data[0];
+    confidence = msg.data[1];
+    // if (confidence< 0.95){
+    //   detected_direction = -1;
+    // }
+    std::cout << "direction ---" << detected_direction << "\n"<<
+          "Confidence---"<< confidence<< std::endl;
+
+  }
+
+	void sub_odom_rover_calllback(const nav_msgs::msg::Odometry::SharedPtr msg_odom){
+	// RCLCPP_WARN(this->get_logger(), "Odometry callback triggered");
+		std::cout << "\nRECEIVED Rover Position DATA"   << std::endl;
+    rover_current_ang_vel = msg_odom->twist.twist.angular.z;
+    std::cout << "ang_vel:  --" << rover_current_ang_vel << std::endl;
+
+
+		rover_pos.x() = msg_odom->pose.pose.position.x ;
+		rover_pos.y() = msg_odom->pose.pose.position.y ;
+		rover_pos.z() = msg_odom->pose.pose.position.z ;
+
+		rover_orientation_q.w() = msg_odom->pose.pose.orientation.w;
+		rover_orientation_q.x() = msg_odom->pose.pose.orientation.x;
+		rover_orientation_q.y() = msg_odom->pose.pose.orientation.y;
+		rover_orientation_q.z() = msg_odom->pose.pose.orientation.z;
+
+		// std::cout << "\n rover_x, y , z ----" << rover_x <<", " << rover_y << ", " << rover_z << std::endl;
+		// std::cout << "\n rover_yaw ---!!-" << rover_yaw <<" !! "<< std::endl;
+	}
   // cv::VideoWriter video_writer_;
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_vel;
   rclcpp::TimerBase::SharedPtr timer_vel_pub;
   rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr vid_subscriber;
   rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher_img;
+  rclcpp::Subscription<std_msgs::msg::Float32MultiArray>::SharedPtr subscriber_decision ;
+  rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr subscriber_odom_rover ;
 };
 
 int main(int argc, char *argv[]) {

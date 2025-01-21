@@ -11,6 +11,7 @@ import cv2
 from rclpy.node import Node
 from cv_bridge import CvBridge
 from sensor_msgs.msg import Image as rosImage
+from std_msgs.msg import Float32MultiArray
 import numpy as np
 
 
@@ -22,10 +23,10 @@ class DecisionMakingNode(Node):
         super().__init__("decision_making_node")
         self.get_logger().info("Decision is being made............")
 
-        self.subscriber = self.create_subscription(rosImage, '/gray_scale_img', self.make_decision_callback, 10) 
+        self.subscriber_img = self.create_subscription(rosImage, 'autonomous_node/gray_scale_img', self.make_decision_callback, 10) 
         self.bridge = CvBridge()
 
-        self.publisher = self.create_publisher()
+        self.publisher_decision = self.create_publisher(Float32MultiArray, 'decision_node/detected_direction', 10)
 
     def process_image_for_pil(self, image):
         # Load Image and process to input into the model -------------------
@@ -50,6 +51,9 @@ class DecisionMakingNode(Node):
         return image
 
 
+    # def publish_decision(self, msg):
+    #     self.publish_decision(msg)
+
     def make_decision_callback(self, image):
         # Disable scientific notation for clarity
         np.set_printoptions(suppress=True)
@@ -72,11 +76,7 @@ class DecisionMakingNode(Node):
         # determined by the first position in the shape tuple, in this case 1
         data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
-        # # Load Image and process to input into the model -------------------
-        # frame = self.bridge.imgmsg_to_cv2(image, desired_encoding='bgr8')
-        # print("Frame type: ", type(frame))
-        # image = frame.convert("RGB")
-
+        ## Load Image and process to input into the model -------------------
         image = self.process_image_for_pil(image)
 
         size = (224, 224)
@@ -93,11 +93,18 @@ class DecisionMakingNode(Node):
         prediction = model.predict(data)
         index = np.argmax(prediction)
         class_name = class_names[index]
-        confidence_score = prediction[0][index]
+        confidence_score = float(prediction[0][index])
+
+        class_num= float(class_name[0])   # 0: Left # 1: Right
 
         # Print prediction and confidence score
         print("Class:", class_name[2:], end="")
         print("Confidence Score:", confidence_score)
+
+        decision_msg = Float32MultiArray()
+        decision_msg.data = [class_num, confidence_score]
+
+        self.publisher_decision.publish(decision_msg)
 
         # # displaying what is being recorded 
         # cv2.imshow("output_of_decision_node", frame)

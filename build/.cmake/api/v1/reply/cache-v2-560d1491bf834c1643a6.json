@@ -1222,6 +1222,30 @@
 			"value" : "/opt/ros/humble/lib/x86_64-linux-gnu/cmake/CycloneDDS"
 		},
 		{
+			"name" : "Eigen3_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for Eigen3."
+				}
+			],
+			"type" : "PATH",
+			"value" : "/usr/share/eigen3/cmake"
+		},
+		{
+			"name" : "FIND_PACKAGE_MESSAGE_DETAILS_Eigen3",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Details about finding Eigen3"
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : "[1][v3.4.0()]"
+		},
+		{
 			"name" : "FIND_PACKAGE_MESSAGE_DETAILS_OpenCV",
 			"properties" : 
 			[
@@ -1784,6 +1808,18 @@
 			],
 			"type" : "PATH",
 			"value" : "/opt/ros/humble/share/cv_bridge/cmake"
+		},
+		{
+			"name" : "eigen3_cmake_module_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for eigen3_cmake_module."
+				}
+			],
+			"type" : "PATH",
+			"value" : "/opt/ros/humble/share/eigen3_cmake_module/cmake"
 		},
 		{
 			"name" : "fastcdr_DIR",
