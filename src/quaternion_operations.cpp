@@ -52,3 +52,17 @@ Quaterniond euler_to_quat(const Vector3d& E){
     return q;
 
 }
+
+Vector3d normalize_vec(Vector3d input){
+    Vector3d output;
+    output.x() = atan2(sin(input.x()),cos(input.x()));
+    output.y() = atan2(sin(input.y()),cos(input.y()));
+    output.z() = atan2(sin(input.z()),cos(input.z()));
+    return output;
+}
+
+double normalize_element(double input){
+    double output;
+    output = atan2(sin(input),cos(input));
+    return output;
+}

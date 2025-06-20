@@ -51,14 +51,18 @@ public:
 
 private:
   rclcpp::Time current_time;
-  rclcpp::Time prev_time;
+  rclcpp::Time prev_time_pid;
+  rclcpp::Time previous_time;
   float prev_error = 0.0f; // Pid prev error
 
   std::string action = "Blank";
   float velocity_lin, velocity_ang;
 
+  
   int16_t center_frame_x;
   int16_t center_frame_y;
+  int roi_start_x;
+  int roi_start_y;
 
   int arrow_left_edge;
   int arrow_right_edge;
@@ -76,6 +80,8 @@ private:
   float edge_pxl_percentage;
   cv::Mat roi_result;
 
+
+  int time_to_turn_flag = 0;
   float detected_direction = -1.0; // # 0: Left # 1: Right
   float confidence = -1.0;
 
@@ -84,7 +90,11 @@ private:
   Quaterniond rover_orientation_q;
   float rover_current_ang_vel;
 
+  float delta_t;
+  float total_rotation=0;
+
   void image_process_callback(const sensor_msgs::msg::Image::SharedPtr msg_vid) {
+    // current_time = this->now(); 
 
     cv::Mat vid_output;
     cv::Mat frame = cv_bridge::toCvCopy(msg_vid, "bgr8")->image;
@@ -114,10 +124,10 @@ private:
 
 
     // Describe RoI and prepare final framing.................... 
-    int roiWidth = 380;
-    int roiHeight = 240;
-    int roi_start_x = center_frame_x - roiWidth / 2;
-    int roi_start_y = center_frame_y - roiHeight / 2;
+    int roiWidth = 380; //380
+    int roiHeight = 240; //240
+    roi_start_x = center_frame_x - roiWidth / 2;
+    roi_start_y = center_frame_y - roiHeight / 2;
 
 
     cv::Rect region_of_interest(roi_start_x, roi_start_y, roiWidth, roiHeight);  // Mask for region to be visible
@@ -128,6 +138,7 @@ private:
     
     cv::bitwise_and(canny, black_mask, roi_result);
 
+
     if (detected_direction == 0.0){
       action = "<---- LEFT";
     }
@@ -135,16 +146,18 @@ private:
     {
       action = "RIGHT ---->";
     }
-    // else{}
+    else{action = "Blank";}
     
 
     auto [left_edge_point, right_edge_point] = find_non_zero_points(roi_result);
-    arrow_left_edge = left_edge_point, arrow_right_edge = right_edge_point; // use this control ang_vel wrt centre_x of frame.
+    arrow_left_edge = left_edge_point;
+    arrow_right_edge = right_edge_point; // use this control ang_vel wrt centre_x of frame.
+
     arrow_mid_point = left_edge_point + (right_edge_point- left_edge_point)/2;
 
     // std::cout << "Left:  " << left_edge_point<< "Right:  "<< right_edge_point << std::endl;
 
-    vid_output = roi_result;
+    vid_output = roi_result.clone();
 
     // std::cout << "Frame size: " << vid_output.cols << "x" << vid_output.rows << std::endl;
 
@@ -166,11 +179,6 @@ private:
                 cv::FONT_HERSHEY_DUPLEX, 
                 1.0, CV_RGB(255, 255, 255), 2);
 
-    // cv::putText(roi_result, std::to_string(velocity_lin), 
-    //             cv::Point(20, 120), 
-    //             cv::FONT_HERSHEY_DUPLEX, 
-    //             1.0, CV_RGB(255, 255, 255), 2);
-
 
     cv::imshow("output", vid_output);
     if (cv::waitKey(1) == 27) {
@@ -179,8 +187,26 @@ private:
   }
 
 
+  // std::tuple<int,int> find_non_zero_points(cv::Mat image){
+  //   std::vector<cv::Point> edge_points;
+
+  //   cv::findNonZero(image, edge_points);
+  //   std::vector<int> columns;
+
+  //   for (const auto& point : edge_points){
+  //     columns.push_back(point.x);
+  //   }
+
+  //   int left_edge_point_pos =  *std::min_element(columns.begin(),columns.end());
+  //   int right_edge_point_pos = *std::max_element(columns.begin(),columns.end());
+
+  //   return {left_edge_point_pos, right_edge_point_pos};
+  // }
+
   std::tuple<int,int> find_non_zero_points(cv::Mat image){
     std::vector<cv::Point> edge_points;
+    int left_edge_point_pos;
+    int right_edge_point_pos;
 
     cv::findNonZero(image, edge_points);
     std::vector<int> columns;
@@ -189,12 +215,18 @@ private:
       columns.push_back(point.x);
     }
 
-    int left_edge_point_pos =  *std::min_element(columns.begin(),columns.end());
-    int right_edge_point_pos = *std::max_element(columns.begin(),columns.end());
+    if (!columns.empty()) {
 
+        // Find the leftmost and rightmost points
+        left_edge_point_pos = *std::min_element(columns.begin(), columns.end());
+        right_edge_point_pos = *std::max_element(columns.begin(), columns.end());
+    } else {
+        // Default values when no pixels are found
+        left_edge_point_pos = roi_start_x;
+        right_edge_point_pos = center_frame_x + center_frame_x;
+    }
     return {left_edge_point_pos, right_edge_point_pos};
   }
-
 
   float find_edge_percentage(cv::Mat image){
     float total_pixels = image.rows* image.cols;
@@ -208,8 +240,8 @@ private:
   float PID_control(float ref_point, float current_state, float kp,float ki,float kd){
 
     current_time = this->now();
-    float dt = (prev_time.nanoseconds()>0) ? (current_time - prev_time).seconds() : .001 ;
-    prev_time = current_time;
+    float dt = (prev_time_pid.nanoseconds()>0) ? (current_time - prev_time_pid).seconds() : .001 ;
+    prev_time_pid = current_time;
     // RCLCPP_INFO(this->get_logger(), "dt =>>  %f", dt);
 
     // float prev_error;
@@ -232,29 +264,32 @@ private:
     // if (velocity_lin == 0 && current_time.nanoseconds() == 0.0f){
     //   velocity_lin = 0.65;
     // }
-    if (arrow_left_edge > 240 && arrow_right_edge < 400){
-      float control_output_ang_vel = PID_control(arrow_mid_point, center_frame_x, 0.10f, 0.540f, 0.0f);
-      velocity_ang = std::clamp(control_output_ang_vel, -1.57f, 1.57f);
-    }
-    else{
-      velocity_ang = 0.0;
-    }
-    float control_output_lin_vel = PID_control(row_of_lin_vel, row_of_interest, 0.10f, 0.540f, 0.0f);
-    velocity_lin = std::clamp(control_output_lin_vel, -0.7f, 0.7f);
+    if(time_to_turn_flag == 0){
+      float control_output_lin_vel = PID_control(row_of_lin_vel, row_of_interest, 0.250f, 0.540f, 0.0f);
+      velocity_lin = std::clamp(control_output_lin_vel, -0.7f, 0.7f);
 
-    // if (abs(arrow_mid_point-center_frame_x) < 5){
-    //   velocity_ang = 0.0;
-    // }
-    if (edge_pxl_percentage > 0.001 && rover_current_ang_vel < 0.008){
-      velocity_lin = 0.0;
-      img_pub_callback(roi_result);  // Img pub to AI node
-
-      if(detected_direction != -1.0){
-        find_des_rover_orientation_q(rover_orientation_q);
+      if (arrow_left_edge > 240 && arrow_right_edge < 400){
+        float control_output_ang_vel = PID_control(arrow_mid_point, center_frame_x, 0.10f, 0.540f, 0.0f);
+        velocity_ang = std::clamp(control_output_ang_vel, -1.57f, 1.57f);
       }
+      else{
+        velocity_ang = 0.0;
+      }
+      std::cout << "Broke Here 1" << std::endl;
+      if (edge_pxl_percentage > 0.001 && rover_current_ang_vel < 0.008){
+        velocity_lin = 0.0;
+        img_pub_callback(roi_result);  // Img pub to AI nod
 
-      // add vel_lin.
+        if(detected_direction != -1.0){
+          time_to_turn_flag = 1;
+        }
+        std::cout << "Broke Here 2" << std::endl;
+        // add vel_lin.
+      }
+      std::cout << "Broke Here 3" << std::endl;
     }
+
+
 
   }
 
@@ -286,10 +321,65 @@ private:
       // Use pid to find ang_vel needed to go from current to desired_yaw
   }
 
+
+  void turning_with_integration(){
+    // current_E_z = abs(current_E_z);
+    // des_E_z = abs(des_E_z);
+    // std::cout << "ang spd:== -----------------------# " << rover_current_ang_vel<< std::endl;
+    // std::cout << "Detected Dir 1:== ---XXX xxxxxxx--   " << detected_direction << std::endl;
+    // std::cout << "Detected Dir while Turning-----------!!! ___!!!!---------==# "<< detected_direction << std::endl ;
+    // std::cout << "Activated Dir while Turning-----------!!! ___!!!!---------==# "<< detected_dir_activated << std::endl ;
+    // std::cout << "Total Rotation:== --------------# " << total_rotation<< std::endl;
+
+    // RCLCPP_INFO(this->get_logger(), "delta_t1 -------------------------=>>  %f", delta_t);
+
+    current_time= this->now();
+    delta_t = (previous_time.nanoseconds()>0) ? (current_time - previous_time).seconds() : .01 ;
+    previous_time = current_time;
+
+
+    total_rotation+= delta_t* rover_current_ang_vel;
+
+    if (detected_direction == 1.0){
+      velocity_ang = -1.0;      
+      if( total_rotation <= -1.5) 
+      {
+        velocity_ang = 0.0;
+        time_to_turn_flag = 0;
+        total_rotation = 0.0f;
+        // detected_direction = -1.0;
+      }
+    }
+
+    else if (detected_direction == 0.0)
+    {
+      velocity_ang = 1.0;
+      if( total_rotation >= 1.5) 
+      {
+        velocity_ang = 0.0;
+        time_to_turn_flag = 0;
+        total_rotation = 0.0f;
+        // detected_direction = -1.0;
+      }
+      
+    }
+  }
+
   void send_cmd_vel(){
     // velocity_lin = 0.3f;
 
-    track_mid_point_of_edges();
+    // track_mid_point_of_edges();
+    if (time_to_turn_flag == 0){
+      track_mid_point_of_edges();
+    }
+
+    if (time_to_turn_flag == 1){
+      // double E_z_des = find_des_rover_orientation_E_z(rover_orientation_q);
+      // turning_with_PID(abs(rover_current_orientation_E.z()), abs(E_z_des));
+      turning_with_integration();
+    }
+
+
     geometry_msgs::msg::Twist velocity_cmd;
     geometry_msgs::msg::Pose pose_cmd;
     // pose_cmd.orientation.w = ;
@@ -324,10 +414,32 @@ private:
     // if (confidence< 0.95){
     //   detected_direction = -1;
     // }
+
+    post_process_detected_direction(detected_direction, confidence);
     std::cout << "direction ---" << detected_direction << "\n"<<
           "Confidence---"<< confidence<< std::endl;
 
   }
+
+  void post_process_detected_direction(float det_dir_raw,float conf_raw){
+
+    if (conf_raw < 0.90){
+      detected_direction = -1.0f;
+      confidence = -1.0f;
+      std::cout << "X-- Confidence LOW!! --X "<< std::endl;
+    }
+    else{
+      float detected_direction_primary = det_dir_raw;
+      confidence = conf_raw;
+
+      if (detected_direction_primary== 2.0f){detected_direction = -1.0f;}
+
+      if (detected_direction_primary == 0.0){detected_direction = 0.0;}
+      if (detected_direction_primary == 1.0){detected_direction = 1.0;}
+
+    }
+  }
+
 
 	void sub_odom_rover_calllback(const nav_msgs::msg::Odometry::SharedPtr msg_odom){
 	// RCLCPP_WARN(this->get_logger(), "Odometry callback triggered");

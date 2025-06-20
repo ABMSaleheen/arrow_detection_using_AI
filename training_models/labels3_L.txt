@@ -1,0 +1,3 @@
+0 dir_left
+1 dir_right
+2 blank

@@ -15,5 +15,8 @@ Quaterniond quat_prod(const Quaterniond& q1, const Quaterniond& q2);
 // Quaterniond quat_mult_f(Quaterniond q1, float a);
 Vector3d quat_to_euler(const Quaterniond& q);
 Quaterniond euler_to_quat(const Vector3d& E);
+Vector3d normalize_vec(Vector3d input);
+double normalize_element(double input);
+
 
 #endif

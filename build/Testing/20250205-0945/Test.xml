@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="(empty)"
+	BuildStamp="20250205-0945-Experimental"
+	Name="saleheen-ROG-Linux"
+	Generator="ctest-3.22.1"
+	CompilerName="/usr/bin/g++"
+	CompilerVersion="11.4.0"
+	OSName="Linux"
+	Hostname="saleheen-ROG-Linux"
+	OSRelease="6.8.0-52-generic"
+	OSVersion="#53~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Wed Jan 15 19:18:46 UTC 2"
+	OSPlatform="x86_64"
+	Is64Bits="1"
+	VendorString="AuthenticAMD"
+	VendorID="Advanced Micro Devices"
+	FamilyID="25"
+	ModelID="80"
+	ProcessorCacheSize="512"
+	NumberOfLogicalCPU="16"
+	NumberOfPhysicalCPU="8"
+	TotalVirtualMemory="0"
+	TotalPhysicalMemory="31508"
+	LogicalProcessorsPerPhysical="2"
+	ProcessorClockFrequency="4292.29"
+	>
+	<Testing>
+		<StartDateTime>Feb 05 19:52 CET</StartDateTime>
+		<StartTestTime>1738781571</StartTestTime>
+		<TestList/>
+		<EndDateTime>Feb 05 19:52 CET</EndDateTime>
+		<EndTestTime>1738781571</EndTestTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Testing>
+</Site>
